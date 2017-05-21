@@ -31,7 +31,7 @@ DA=None
 def getDA():
     global DA
     if DA is None:
-        import DA
+        from . import DA
     return DA
 
 getDA()

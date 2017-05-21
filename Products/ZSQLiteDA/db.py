@@ -28,26 +28,23 @@ def manage_DataSources():
         try:
             os.mkdir(data_dir)
         except:
-            raise SQLiteError, (
+            raise SQLiteError(
                 """
                 The Zope SQLite Database Adapter requires the
                 existence of the directory, <code>%s</code>.  An error
                 occurred  while trying to create this directory.
                 """ % data_dir)
     if not os.path.isdir(data_dir):
-        raise SQLiteError, (
+        raise SQLiteError(
             """
             The Zope SQLite Database Adapter requires the
             existence of the directory, <code>%s</code>.  This
             exists, but is not a directory.
             """ % data_dir)
 
-    return map(
-        lambda d: (d,''),
-        filter(lambda f, i=os.path.isfile, d=data_dir, j=os.path.join:
+    return [(d,'') for d in list(filter(lambda f, i=os.path.isfile, d=data_dir, j=os.path.join:
                i(j(d,f)),
-               os.listdir(data_dir))
-        )
+               os.listdir(data_dir)))]
 
 class DB(Shared.DC.ZRDB.THUNK.THUNKED_TM):
 
@@ -92,22 +89,21 @@ class DB(Shared.DC.ZRDB.THUNK.THUNKED_TM):
     def query(self,query_string, max_rows=None):
         self._begin()
         c = self.db.cursor()
-        queries=filter(None, map(strip,split(query_string, '\0')))
+        queries=[_f for _f in map(strip,split(query_string, '\0')) if _f]
         if not queries: raise 'Query Error', 'empty query'
         desc=None
         result=[]
         for qs in queries:
             if self.page_charset:
-                qs = unicode(qs, self.page_charset)
+                qs = str(qs, self.page_charset)
             c.execute(qs)
             d=c.description
             if d is None: continue
             if desc is None: desc=d
             elif d != desc:
-                raise QueryError, (
+                raise QueryError(
                     'Multiple incompatible selects in '
-                    'multiple sql-statement query'
-                    )
+                    'multiple sql-statement query')
 
             if max_rows:
                 if not result: result=c.fetchmany(max_rows)

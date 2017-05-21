@@ -16,7 +16,7 @@ __doc__='''%s Database Connection
 $Id: DA.py,v 1.10 2009/08/08 08:18:24 nakagami Exp $''' % database_type
 __version__='$Revision: 1.10 $'[11:-2]
 
-from db import DB, manage_DataSources
+from .db import DB, manage_DataSources
 import sys, DABase
 from App.special_dtml import HTMLFile
 import Shared.DC.ZRDB.Connection, ThreadLock
